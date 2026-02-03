@@ -184,11 +184,17 @@ public class SinglyLinkedList<E> implements List<E> {
         if (isEmpty()) {
             return null;
         }
+        if (head.getNext() == null) {
+            E element = head.getElement();
+            head = null;
+            size--;
+            return element;
+        }
         Node<E> current = head;
-        while (current.getNext() != null) {
+        while (current.getNext().getNext() != null) {
             current = current.getNext();
         }
-        E element = current.getElement();
+        E element = current.getNext().getElement();
         current.setNext(null);
         size--;
         return element;
@@ -228,6 +234,73 @@ public class SinglyLinkedList<E> implements List<E> {
         return sb.toString();
     }
 
+    // Q8: sortedMerge
+    @SuppressWarnings("unchecked")
+    public void sortedMerge(SinglyLinkedList<E> otherList) {
+        Node<E> dummy = new Node<>(null, null);
+        Node<E> tail = dummy;
+        Node<E> a = this.head;
+        Node<E> b = otherList.head;
+
+        while (a != null && b != null) {
+            Comparable<? super E> aElem = (Comparable<? super E>) a.getElement();
+            if (aElem.compareTo(b.getElement()) <= 0) {
+                tail.setNext(a);
+                a = a.getNext();
+            } else {
+                tail.setNext(b);
+                b = b.getNext();
+            }
+            tail = tail.getNext();
+        }
+
+        if (a != null) {
+            tail.setNext(a);
+        } else {
+            tail.setNext(b);
+        }
+
+        this.head = dummy.getNext();
+    }
+
+    // Q9: reverse
+    public void reverse() {
+        Node<E> prev = null;
+        Node<E> current = head;
+        Node<E> next = null;
+        while (current != null) {
+            next = current.getNext();
+            current.setNext(prev);
+            prev = current;
+            current = next;
+        }
+        head = prev;
+    }
+
+    // Q10 clone
+    @Override
+    public SinglyLinkedList<E> clone() {
+        SinglyLinkedList<E> clonedList = new SinglyLinkedList<>();
+        if (head == null) {
+            return clonedList;
+        }
+
+        Node<E> current = head;
+        clonedList.head = new Node<>(current.getElement(), null);
+        Node<E> clonedCurrent = clonedList.head;
+        current = current.getNext();
+
+        while (current != null) {
+            Node<E> newNode = new Node<>(current.getElement(), null);
+            clonedCurrent.setNext(newNode);
+            clonedCurrent = newNode;
+            current = current.getNext();
+        }
+
+        clonedList.size = this.size;
+        return clonedList;
+    }
+
     public static void main(String[] args) {
         SinglyLinkedList<Integer> ll = new SinglyLinkedList<Integer>();
         System.out.println("ll " + ll + " isEmpty: " + ll.isEmpty());
@@ -246,6 +319,30 @@ public class SinglyLinkedList<E> implements List<E> {
         System.out.println(ll);
         ll.remove(5);
         System.out.println(ll);
+
+        ll.reverse();
+        System.out.println(ll);
+
+        // l1 = {2, 6, 20, 24};
+        // l2 = {1, 3, 5, 8, 12, 19, 25};
+        // test sortedMerge
+        SinglyLinkedList<Integer> l1 = new SinglyLinkedList<Integer>();
+        l1.addLast(2);
+        l1.addLast(6);
+        l1.addLast(20);
+        l1.addLast(24);
+        SinglyLinkedList<Integer> l2 = new SinglyLinkedList<Integer>();
+        l2.addLast(1);
+        l2.addLast(3);
+        l2.addLast(5);
+        l2.addLast(8);
+        l2.addLast(12);
+        l2.addLast(19);
+        l2.addLast(25);
+        System.out.println("l1: " + l1);
+        System.out.println("l2: " + l2);
+        l1.sortedMerge(l2);
+        System.out.println("After merge, l1: " + l1);
 
     }
 }

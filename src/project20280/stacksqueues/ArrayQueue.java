@@ -7,17 +7,16 @@ public class ArrayQueue<E> implements Queue<E> {
     private static final int CAPACITY = 1000;
     private E[] data;
     private final int front = 0;
-    private final int size = 0;
+    private int size = 0;
 
     public ArrayQueue(int capacity) {
         // TODO
-
+        data = (E[]) new Object[capacity];
     }
 
     public ArrayQueue() {
         this(CAPACITY);
     }
-
 
     @Override
     public int size() {
@@ -32,6 +31,12 @@ public class ArrayQueue<E> implements Queue<E> {
     @Override
     public void enqueue(E e) {
         // TODO
+        if (size == CAPACITY) {
+            throw new IllegalStateException("Queue is full");
+        }
+        int avail = (front + size) % CAPACITY;
+        data[avail] = e;
+        size++;
     }
 
     @Override
@@ -42,7 +47,13 @@ public class ArrayQueue<E> implements Queue<E> {
     @Override
     public E dequeue() {
         // TODO
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+        E res = data[front];
+        data[front] = null;
+        size--;
+        return res;
     }
 
     public String toString() {
@@ -50,7 +61,8 @@ public class ArrayQueue<E> implements Queue<E> {
         for (int i = 0; i < size; ++i) {
             E res = data[(front + i) % CAPACITY];
             sb.append(res);
-            if (i != size - 1) sb.append(", ");
+            if (i != size - 1)
+                sb.append(", ");
         }
         sb.append("]");
         return sb.toString();
@@ -66,7 +78,8 @@ public class ArrayQueue<E> implements Queue<E> {
         }
         System.out.println(qq);
 
-        for (int i = 0; i < N / 2; ++i) qq.dequeue();
+        for (int i = 0; i < N / 2; ++i)
+            qq.dequeue();
         System.out.println(qq);
 
     }

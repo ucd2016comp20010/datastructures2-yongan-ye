@@ -1,6 +1,5 @@
 package project20280.stacksqueues;
 
-
 import org.junit.jupiter.api.Test;
 import project20280.interfaces.Stack;
 
@@ -8,7 +7,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 
 public class ArrayStackTest {
     @Test
@@ -18,7 +16,8 @@ public class ArrayStackTest {
         assertEquals(0, s.size());
 
         int N = 16;
-        for (int i = 0; i < N; ++i) s.push(i);
+        for (int i = 0; i < N; ++i)
+            s.push(i);
         assertEquals(N, s.size());
     }
 
@@ -47,7 +46,7 @@ public class ArrayStackTest {
         Stack<Integer> s = new ArrayStack<>();
         for (int i = 0; i < 10; ++i)
             s.push(i);
-        assertEquals(9, Optional.ofNullable(s.top()));
+        assertEquals(9, s.top());
     }
 
     @Test
@@ -55,7 +54,7 @@ public class ArrayStackTest {
         Stack<Integer> s = new ArrayStack<>();
         for (int i = 0; i < 10; ++i)
             s.push(i);
-        assertEquals(9, Optional.ofNullable(s.pop()));
+        assertEquals(9, s.pop());
         assertEquals(9, s.size());
     }
 
@@ -66,4 +65,12 @@ public class ArrayStackTest {
             s.push(i);
         assertEquals("[9, 8, 7, 6, 5, 4, 3, 2, 1, 0]", s.toString());
     }
+
+    // @Test
+    // void testConvertToBinary() {
+    // Stack<Long> s = new ArrayStack<>();
+    // assertEquals("10111", s.convertToBinary(23));
+    // assertEquals("11100100000010101100001001110101011011000110001000000000000",
+    // s.convertToBinary(123456789L));
+    // }
 }

@@ -9,6 +9,29 @@ class BracketChecker {
 
     public void check() {
         // TODO
+        ArrayStack<Character> stack = new ArrayStack<>();
+        for (char c : input.toCharArray()) {
+            if (c == '(' || c == '[' || c == '{') {
+                stack.push(c);
+            } else if (c == ')' || c == ']' || c == '}') {
+                if (stack.isEmpty()) {
+                    System.out.println("Not correct: unmatched closing bracket " + c);
+                    return;
+                }
+                char top = stack.pop();
+                if ((c == ')' && top != '(') ||
+                        (c == ']' && top != '[') ||
+                        (c == '}' && top != '{')) {
+                    System.out.println("Not correct: mismatched brackets");
+                    return;
+                }
+            }
+        }
+        if (!stack.isEmpty()) {
+            System.out.println("Not correct: unmatched opening bracket");
+        } else {
+            System.out.println("Correct");
+        }
     }
 
     public static void main(String[] args) {

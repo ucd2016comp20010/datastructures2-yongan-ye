@@ -11,7 +11,8 @@ public class LinkedStack<E> implements Stack<E> {
     }
 
     public LinkedStack() {
-        // TODO
+        // TODO 初始化基于链表的栈
+        ll = new DoublyLinkedList<>();
     }
 
     @Override
@@ -27,18 +28,23 @@ public class LinkedStack<E> implements Stack<E> {
     @Override
     public void push(E e) {
         // TODO
+        ll.addFirst(e);
     }
 
     @Override
     public E top() {
         // TODO
-        return null;
+        return ll.first();
     }
 
     @Override
     public E pop() {
         // TODO
-        return null;
+        if (isEmpty()) {
+            return null;
+        } else {
+            return ll.removeFirst();
+        }
     }
 
     public String toString() {

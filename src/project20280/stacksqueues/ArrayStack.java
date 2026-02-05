@@ -7,33 +7,34 @@ public class ArrayStack<E> implements Stack<E> {
     /**
      * Default array capacity.
      */
-    public static final int CAPACITY = 100;   // default array capacity
+    public static final int CAPACITY = 100; // default array capacity
 
     /**
      * Generic array used for storage of stack elements.
      */
-    private E[] data;                        // generic array used for storage
+    private E[] data; // generic array used for storage
 
     /**
      * Index of the top element of the stack in the array.
      */
-    private final int t = -1;                      // index of the top element in stack
+    private int t = -1; // index of the top element in stack
 
     /**
      * Constructs an empty stack using the default array capacity.
      */
     public ArrayStack() {
         this(CAPACITY);
-    }  // constructs stack with default capacity
+    } // constructs stack with default capacity
 
     /**
      * Constructs and empty stack with the given array capacity.
      *
      * @param capacity length of the underlying array
      */
-    @SuppressWarnings({"unchecked"})
-    public ArrayStack(int capacity) {        // constructs stack with given capacity
+    @SuppressWarnings({ "unchecked" })
+    public ArrayStack(int capacity) { // constructs stack with given capacity
         // TODO
+        data = (E[]) new Object[capacity];
     }
 
     /**
@@ -65,6 +66,11 @@ public class ArrayStack<E> implements Stack<E> {
     @Override
     public void push(E e) {
         // TODO
+        if (size() == data.length) {
+            throw new IllegalStateException("Stack is full");
+        }
+        data[t + 1] = e;
+        t++;
     }
 
     /**
@@ -75,7 +81,11 @@ public class ArrayStack<E> implements Stack<E> {
     @Override
     public E top() {
         // TODO
-        return null;
+        if (isEmpty()) {
+            return null;
+        } else {
+            return data[t];
+        }
     }
 
     /**
@@ -86,7 +96,14 @@ public class ArrayStack<E> implements Stack<E> {
     @Override
     public E pop() {
         // TODO
-        return null;
+        if (!isEmpty()) {
+            E topElement = data[t];
+            data[t] = null;
+            t--;
+            return topElement;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -100,10 +117,25 @@ public class ArrayStack<E> implements Stack<E> {
         if (!isEmpty()) {
             for (int i = t; i >= 0; --i) {
                 sb.append(data[i]);
-                if (i != 0) sb.append(", ");
+                if (i != 0)
+                    sb.append(", ");
             }
         }
         sb.append("]");
+        return sb.toString();
+    }
+
+    public static String convertToBinary(long dec_num) {
+        // TODO
+        ArrayStack<Long> stack = new ArrayStack<>();
+        while (dec_num > 0) {
+            stack.push(dec_num % 2);
+            dec_num = dec_num / 2;
+        }
+        StringBuilder sb = new StringBuilder();
+        while (!stack.isEmpty()) {
+            sb.append(stack.pop());
+        }
         return sb.toString();
     }
 
@@ -111,24 +143,24 @@ public class ArrayStack<E> implements Stack<E> {
      * Demonstrates sample usage of a stack.
      */
     public static void main(String[] args) {
-        Stack<Integer> S = new ArrayStack<>();  // contents: ()
-        S.push(5);                              // contents: (5)
-        S.push(3);                              // contents: (5, 3)
-        System.out.println(S.size());           // contents: (5, 3)     outputs 2
-        System.out.println(S.pop());            // contents: (5)        outputs 3
-        System.out.println(S.isEmpty());        // contents: (5)        outputs false
-        System.out.println(S.pop());            // contents: ()         outputs 5
-        System.out.println(S.isEmpty());        // contents: ()         outputs true
-        System.out.println(S.pop());            // contents: ()         outputs null
-        S.push(7);                              // contents: (7)
-        S.push(9);                              // contents: (7, 9)
-        System.out.println(S.top());            // contents: (7, 9)     outputs 9
-        S.push(4);                              // contents: (7, 9, 4)
-        System.out.println(S.size());           // contents: (7, 9, 4)  outputs 3
-        System.out.println(S.pop());            // contents: (7, 9)     outputs 4
-        S.push(6);                              // contents: (7, 9, 6)
-        S.push(8);                              // contents: (7, 9, 6, 8)
-        System.out.println(S.pop());            // contents: (7, 9, 6)  outputs 8
+        Stack<Integer> S = new ArrayStack<>(); // contents: ()
+        S.push(5); // contents: (5)
+        S.push(3); // contents: (5, 3)
+        System.out.println(S.size()); // contents: (5, 3) outputs 2
+        System.out.println(S.pop()); // contents: (5) outputs 3
+        System.out.println(S.isEmpty()); // contents: (5) outputs false
+        System.out.println(S.pop()); // contents: () outputs 5
+        System.out.println(S.isEmpty()); // contents: () outputs true
+        System.out.println(S.pop()); // contents: () outputs null
+        S.push(7); // contents: (7)
+        S.push(9); // contents: (7, 9)
+        System.out.println(S.top()); // contents: (7, 9) outputs 9
+        S.push(4); // contents: (7, 9, 4)
+        System.out.println(S.size()); // contents: (7, 9, 4) outputs 3
+        System.out.println(S.pop()); // contents: (7, 9) outputs 4
+        S.push(6); // contents: (7, 9, 6)
+        S.push(8); // contents: (7, 9, 6, 8)
+        System.out.println(S.pop()); // contents: (7, 9, 6) outputs 8
         System.out.println(S);
     }
 }

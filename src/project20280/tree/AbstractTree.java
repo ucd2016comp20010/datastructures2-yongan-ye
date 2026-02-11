@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 /**
  * An abstract base class providing some functionality of the Tree interface.
  * <p>
@@ -53,7 +52,7 @@ public abstract class AbstractTree<E> implements Tree<E> {
     @Override
     public boolean isRoot(Position<E> p) {
         // TODO
-        return false;
+        return p == root();
     }
 
     /**
@@ -77,7 +76,8 @@ public abstract class AbstractTree<E> implements Tree<E> {
     @Override
     public int size() {
         int count = 0;
-        for (Position p : positions()) count++;
+        for (Position p : positions())
+            count++;
         return count;
     }
 
@@ -101,7 +101,11 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     public int depth(Position<E> p) throws IllegalArgumentException {
         // TODO
-        return 0;
+        if (isRoot(p)) {
+            return 0;
+        } else {
+            return 1 + depth(parent(p));
+        }
     }
 
     /**
@@ -109,17 +113,21 @@ public abstract class AbstractTree<E> implements Tree<E> {
      * <p>
      * Note: This implementation works, but runs in O(n^2) worst-case time.
      */
-    private int heightBad() {             // works, but quadratic worst-case time
+    private int heightBad() { // works, but quadratic worst-case time
         int h = 0;
         for (Position<E> p : positions())
-            if (isExternal(p))                // only consider leaf positions
+            if (isExternal(p)) // only consider leaf positions
                 h = Math.max(h, depth(p));
         return h;
     }
 
     public int height_recursive(Position<E> p) {
         // TODO
-        return 0;
+        int h = 0;
+        for (Position<E> c : children(p)) {
+            h = Math.max(h, 1 + height_recursive(c));
+        }
+        return h;
     }
 
     /**
@@ -132,10 +140,12 @@ public abstract class AbstractTree<E> implements Tree<E> {
         return height_recursive(root());
     }
 
-    //---------- support for various iterations of a tree ----------
+    // ---------- support for various iterations of a tree ----------
 
-    //---------------- nested ElementIterator class ----------------
-    /* This class adapts the iteration produced by positions() to return elements. */
+    // ---------------- nested ElementIterator class ----------------
+    /*
+     * This class adapts the iteration produced by positions() to return elements.
+     */
     private class ElementIterator implements Iterator<E> {
         Iterator<Position<E>> posIterator = positions().iterator();
 
@@ -184,7 +194,8 @@ public abstract class AbstractTree<E> implements Tree<E> {
     }
 
     /**
-     * Returns an iterable collection of positions of the tree, reported in preorder.
+     * Returns an iterable collection of positions of the tree, reported in
+     * preorder.
      *
      * @return iterable collection of the tree's positions in preorder
      */
@@ -205,19 +216,21 @@ public abstract class AbstractTree<E> implements Tree<E> {
     }
 
     /**
-     * Returns an iterable collection of positions of the tree, reported in postorder.
+     * Returns an iterable collection of positions of the tree, reported in
+     * postorder.
      *
      * @return iterable collection of the tree's positions in postorder
      */
     public Iterable<Position<E>> postorder() {
         List<Position<E>> snapshot = new ArrayList<>();
         if (!isEmpty())
-            postorderSubtree(root(), snapshot);   // fill the snapshot recursively
+            postorderSubtree(root(), snapshot); // fill the snapshot recursively
         return snapshot;
     }
 
     /**
-     * Returns an iterable collection of positions of the tree in breadth-first order.
+     * Returns an iterable collection of positions of the tree in breadth-first
+     * order.
      *
      * @return iterable collection of the tree's positions in breadth-first order
      */

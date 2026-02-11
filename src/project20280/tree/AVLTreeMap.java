@@ -5,6 +5,8 @@ import project20280.interfaces.Position;
 
 import java.util.Comparator;
 
+import org.apache.commons.math3.geometry.partitioning.utilities.AVLTree.Node;
+
 /**
  * An implementation of a sorted map using an AVL tree.
  */
@@ -32,7 +34,11 @@ public class AVLTreeMap<K, V> extends TreeMap<K, V> {
      */
     protected int height(Position<Entry<K, V>> p) {
         // TODO
-        return 0;
+        int h = 0;
+        for (Position<Entry<K, V>> c : tree.children(p)) {
+            h = Math.max(h, 1 + height(c));
+        }
+        return h;
     }
 
     /**
@@ -109,10 +115,11 @@ public class AVLTreeMap<K, V> extends TreeMap<K, V> {
     public static void main(String[] args) {
         AVLTreeMap avl = new AVLTreeMap<>();
 
-        Integer[] arr = new Integer[]{5, 3, 10, 2, 4, 7, 11, 1, 6, 9, 12, 8};
+        Integer[] arr = new Integer[] { 5, 3, 10, 2, 4, 7, 11, 1, 6, 9, 12, 8 };
 
         for (Integer i : arr) {
-            if (i != null) avl.put(i, i);
+            if (i != null)
+                avl.put(i, i);
             System.out.println("root " + avl.root());
         }
         System.out.println(avl.toBinaryTreeString());

@@ -63,10 +63,10 @@ Output: The number of left external nodes in the subtree v
     if isExternal(v) and isLeft is true then
         return 1
     else if isExternal(v)
-      if v.left() != null then
-        count = count + countLeftExternal(v.left(), true)
-      if v.right() != null then
-        count = count + countLeftExternal(v.right(), false)
+      if v.getLeft() != null then
+        count = count + countLeftExternal(v.getLeft(), true)
+      if v.getRight() != null then
+        count = count + countLeftExternal(v.getRight(), false)
     return count
 
 ## Q4: Consider a binary tree, where each node holds a single character. The nodes, in no particular order are ['A', 'E', 'F', 'M', 'N', 'U', 'X'].
@@ -118,8 +118,8 @@ Output: The total number of descendants of v (excluding v itself)
     if isExternal(v) then
         return 0
     count = 0
-    if v.left() != null then
-        count = count + 1 + countDescendants(v.left())
-    if v.right() != null then
-        count = count + 1 + countDescendants(v.right())
+    if v.getLeft() != null then
+        count = count + 1 + countDescendants(v.getLeft())
+    if v.getRight() != null then
+        count = count + 1 + countDescendants(v.getRight())
     return count

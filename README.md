@@ -123,3 +123,113 @@ Output: The total number of descendants of v (excluding v itself)
     if v.getRight() != null then
         count = count + 1 + countDescendants(v.getRight())
     return count
+
+# EXERCISES 5
+
+Q3:
+T(n) = T(n-1) + T(n-2) + T(n-3)
+
+T(9):
+T(0) = 0
+T(1) = 0
+T(2) = 1
+T(3) = 0 + 0 + 1
+T(4) = 0 + 1 + 1
+T(5) = 1 + 1 + 2
+T(6) = 1 + 2 + 4
+
+Q4:
+public int m91(int n) {
+if (n > 100) return n - 10;
+return m91(m91(n + 11));
+}
+
+M(87){
+M(98){
+M(109){
+109-10= 99
+}
+}
+}
+
+Q5:
+(a) Convert the integer x to its binary representation and print it.
+(b) 100110100100
+
+Q6:
+(a)
+printReverseLinkedList(oldNode){
+if (oldNode == null) return null;
+newNode.next = printReverseLinkedList(oldNode.next);
+print(newNode.val);
+}
+
+(b)
+reverseLinkedList(oldNode){
+if (oldNode == null || oldNode.next == null) return oldNode;
+newNode = reverseLinkedList(oldNode.next);
+oldNode.next.next = newNode;
+oldNode.next = null;
+return newNode;
+}
+
+Q7:
+(a)
+copyLinkedList(oldNode){
+newNode = new Node(oldNode.val);
+newNode.next = copyLinkedList(oldNode.next);
+return newNode;
+}
+
+(b)
+public SinglyLinkedList<E> recursiveCopy() {
+SinglyLinkedList<E> newList = new SinglyLinkedList<>();
+newList.head = deepCopy(this.head);
+return newList;
+
+    private Node<E> deepCopy(Node<E> node) {
+        if (node == null) return null;
+        return new Node<>(node.element, deepCopy(node.next));
+    }
+
+}
+
+Q8:
+mystery(2,4,4){
+return 4 + mystery(1,4,4){
+return 4
+}
+}
+
+Q9:
+public void printLeaves(Node node) {
+if (node == null) return;
+if (node.left == null && node.right == null) {
+System.out.print(node.element + " ");
+}
+printLeaves(node.left);
+printLeaves(node.right);
+}
+
+# EXERCISES 8
+
+Q3:
+12: (36 + 5)mod 11= 41 mod 11 = 8
+44: (132 +5) mod 11= 137 mod 11=5
+13: (39 + 5) mod 11= 44 mod 11 =0
+88: (264+5)mod 11=269 mod 11=5( conflict with 44)
+23:(69+5)mod 11=74mod 11= 8(conflict with 12)
+94: (282 +5) mod 11= 287 mod 11=1
+11:(33 +5) mod 11= 38 mod 11= 5 (conflict with 44 and 88)
+39:(117+5)mod 11=122 mod 11=1(conflict with 94)
+20: (60 +5) mod 11=65 mod 11= 10
+16: (48 + 5) mod 11= 53 mod 11=9
+5:(15+5)mod 11=20mod11=9(conflict with 16)
+
+so the table is:
+0: [13]
+1: [94, 39]
+5: [44, 88, 11]
+8: [12, 23]
+9: [16, 5]
+10: [20]

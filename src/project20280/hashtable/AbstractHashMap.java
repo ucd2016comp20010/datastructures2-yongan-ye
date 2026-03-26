@@ -1,6 +1,8 @@
 package project20280.hashtable;
 
 import project20280.interfaces.AbstractMap;
+import project20280.interfaces.Entry;
+import project20280.interfaces.Map;
 
 import java.util.Random;
 
@@ -19,11 +21,11 @@ import java.util.Random;
  * to reflect changes within bucketPut and bucketRemove.
  */
 public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
-    private final int prime;                   // prime factor
+    private final int prime; // prime factor
     private final long scale;
-    private final long shift;           // the shift and scaling factors
-    protected int n = 0;                 // number of entries in the dictionary
-    protected int capacity;              // length of the table
+    private final long shift; // the shift and scaling factors
+    protected int n = 0; // number of entries in the dictionary
+    protected int capacity; // length of the table
 
     /**
      * Creates a hash table with the given capacity and prime factor.
@@ -42,14 +44,14 @@ public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
      */
     public AbstractHashMap(int cap) {
         this(cap, 109345121);
-    }  // default prime
+    } // default prime
 
     /**
      * Creates a hash table with capacity 17 and prime factor 109345121.
      */
     public AbstractHashMap() {
         this(17);
-    }                     // default capacity
+    } // default capacity
 
     // public methods
 
@@ -64,7 +66,8 @@ public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
     }
 
     /**
-     * Returns the value associated with the specified key, or null if no such entry exists.
+     * Returns the value associated with the specified key, or null if no such entry
+     * exists.
      *
      * @param key the key whose associated value is to be returned
      * @return the associated value, or null if no such entry exists
@@ -79,10 +82,16 @@ public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
      * its associated value. Otherwise does nothing and returns null.
      *
      * @param key the key whose entry is to be removed from the map
-     * @return the previous value associated with the removed key, or null if no such entry exists
+     * @return the previous value associated with the removed key, or null if no
+     *         such entry exists
      */
     @Override
     public V remove(K key) {
+        if (get(key) == null) {
+            return null;
+        } else {
+            n--;
+        }
         return bucketRemove(hashValue(key), key);
     }
 
@@ -94,12 +103,17 @@ public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
      *
      * @param key   key with which the specified value is to be associated
      * @param value value to be associated with the specified key
-     * @return the previous value associated with the key (or null, if no such entry)
+     * @return the previous value associated with the key (or null, if no such
+     *         entry)
      */
     @Override
     public V put(K key, V value) {
         // TODO
-        return null;
+        V answer = bucketPut(hashValue(key), key, value);
+        if (n > capacity / 2) {
+            resize(2 * capacity - 1); // keep capacity as an odd integer
+        }
+        return answer;
     }
 
     // private utilities
@@ -109,7 +123,7 @@ public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
      */
     private int hashValue(K key) {
         // TODO
-        return 0;
+        return (int) ((Math.abs(key.hashCode() * scale + shift) % prime) % capacity);
     }
 
     /**
@@ -117,6 +131,16 @@ public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
      */
     private void resize(int newCap) {
         // TODO
+        java.util.ArrayList<Entry<K, V>> buffer = new java.util.ArrayList<>(n);
+        for (Entry<K, V> entry : entrySet()) {
+            buffer.add(entry);
+        }
+        capacity = newCap;
+        createTable();
+        n = 0;
+        for (Entry<K, V> entry : buffer) {
+            bucketPut(hashValue(entry.getKey()), entry.getKey(), entry.getValue());
+        }
     }
 
     // protected abstract methods to be implemented by subclasses

@@ -3,6 +3,8 @@ package project20280.hashtable;
 import project20280.interfaces.Entry;
 
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.io.File;
 
 /*
  * Map implementation using hash table with separate chaining.
@@ -37,7 +39,7 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
      * Creates an empty table having length equal to current capacity.
      */
     @Override
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     protected void createTable() {
         table = new UnsortedTableMap[capacity];
     }
@@ -53,7 +55,11 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
     @Override
     protected V bucketGet(int h, K k) {
         // TODO
-        return null;
+        UnsortedTableMap<K, V> bucket = table[h];
+        if (bucket == null) {
+            return null;
+        }
+        return bucket.get(k);
     }
 
     /**
@@ -68,9 +74,16 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
     @Override
     protected V bucketPut(int h, K k, V v) {
         // TODO
-        return null;
+        UnsortedTableMap<K, V> bucket = table[h];
+        if (bucket == null) {
+            bucket = new UnsortedTableMap<>();
+            table[h] = bucket;
+        }
+        int oldSize = bucket.size();
+        V answer = bucket.put(k, v);
+        n += (bucket.size() - oldSize); // size may have increased
+        return answer;
     }
-
 
     /**
      * Removes entry having key k from bucket with hash value h, returning the
@@ -83,7 +96,11 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
     @Override
     protected V bucketRemove(int h, K k) {
         // TODO
-        return null;
+        UnsortedTableMap<K, V> bucket = table[h];
+        if (bucket == null) {
+            return null;
+        }
+        return bucket.remove(k);
     }
 
     /**
@@ -94,10 +111,10 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
     @Override
     public Iterable<Entry<K, V>> entrySet() {
         /*
-        for each element in (UnsortedTableMap []) table
-            for each element in bucket:
-                print element
-        */
+         * for each element in (UnsortedTableMap []) table
+         * for each element in bucket:
+         * print element
+         */
         ArrayList<Entry<K, V>> entries = new ArrayList<>();
         for (UnsortedTableMap<K, V> tm : table) {
             if (tm != null) {
@@ -113,16 +130,33 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
         return entrySet().toString();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws java.io.FileNotFoundException {
         ChainHashMap<Integer, String> m = new ChainHashMap<Integer, String>();
-        m.put(1, "One");
-        m.put(10, "Ten");
-        m.put(11, "Eleven");
-        m.put(20, "Twenty");
+        // m.put(1, "One");
+        // m.put(10, "Ten");
+        // m.put(11, "Eleven");
+        // m.put(20, "Twenty");
 
-        System.out.println("m: " + m);
+        // System.out.println("m: " + m);
 
-        m.remove(11);
-        System.out.println("m: " + m);
+        // m.remove(11);
+        // System.out.println("m: " + m);
+
+        File f = new File("src/project20280/hashtable/sample_text.txt");
+        ChainHashMap<String, Integer> wordCount = new ChainHashMap<String, Integer>();
+        Scanner scanner = new Scanner(f);
+        while (scanner.hasNext()) {
+            String word = scanner.next();
+            System.out.println("word: " + word);
+
+            Integer count = wordCount.get(word);
+            if (count == null) {
+                wordCount.put(word, 1);
+            } else {
+                wordCount.put(word, count + 1);
+            }
+        }
+        System.out.println("wordCount: " + wordCount);
+
     }
 }

@@ -8,7 +8,6 @@ import project20280.interfaces.Entry;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-
 /**
  * An implementation of a priority queue using an array-based heap.
  */
@@ -43,33 +42,38 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      * @param values an array of the initial values for the priority queue
      */
     public HeapPriorityQueue(K[] keys, V[] values) {
-        // TODO
+        int n = Math.min(keys.length, values.length);
+        heap.ensureCapacity(n);
+        for (int j = 0; j < n; j++) {
+            heap.add(new PQEntry<>(keys[j], values[j]));
+        }
+        heapify();
     }
 
     // protected utilities
     protected int parent(int j) {
         // TODO
-        return 0;
+        return (j - 1) / 2;
     }
 
     protected int left(int j) {
         // TODO
-        return 0;
+        return 2 * j + 1;
     }
 
     protected int right(int j) {
         // TODO
-        return 0;
+        return 2 * j + 2;
     }
 
     protected boolean hasLeft(int j) {
         // TODO
-        return false;
+        return left(j) < size();
     }
 
     protected boolean hasRight(int j) {
         // TODO
-        return false;
+        return right(j) < size();
     }
 
     /**
@@ -77,6 +81,9 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      */
     protected void swap(int i, int j) {
         // TODO
+        Entry<K, V> temp = heap.get(i);
+        heap.set(i, heap.get(j));
+        heap.set(j, temp);
     }
 
     /**
@@ -85,6 +92,10 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      */
     protected void upheap(int j) {
         // TODO
+        while (j > 0 && compare(heap.get(j), heap.get(parent(j))) < 0) {
+            swap(j, parent(j));
+            j = parent(j);
+        }
     }
 
     /**
@@ -92,6 +103,10 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      */
     protected void downheap(int j) {
         // TODO
+        while (j > 0 && compare(heap.get(j), heap.get(parent(j))) < 0) {
+            swap(j, parent(j));
+            j = parent(j);
+        }
     }
 
     /**
@@ -99,6 +114,9 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      */
     protected void heapify() {
         // TODO
+        for (int j = (size() - 1) / 2; j >= 0; j--) {
+            downheap(j);
+        }
     }
 
     // public methods
@@ -134,7 +152,10 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
     @Override
     public Entry<K, V> insert(K key, V value) throws IllegalArgumentException {
         // TODO
-        return null;
+        Entry<K, V> newest = new PQEntry<>(key, value);
+        heap.add(newest);
+        upheap(size() - 1);
+        return newest;
     }
 
     /**
@@ -145,7 +166,11 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
     @Override
     public Entry<K, V> removeMin() {
         // TODO
-        return null;
+        Entry<K, V> temp = heap.get(0);
+        heap.set(0, heap.get(size() - 1));
+        heap.remove(size() - 1);
+        downheap(0);
+        return temp;
     }
 
     public String toString() {
@@ -159,7 +184,7 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
         for (int j = 0; j < heap.size(); j++) {
             int left = left(j);
             int right = right(j);
-            //System.out.println("-> " +left + ", " + j + ", " + right);
+            // System.out.println("-> " +left + ", " + j + ", " + right);
             Entry<K, V> e_left, e_right;
             e_left = left < heap.size() ? heap.get(left) : null;
             e_right = right < heap.size() ? heap.get(right) : null;
@@ -175,7 +200,7 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
     }
 
     public static void main(String[] args) {
-        Integer[] rands = new Integer[]{35, 26, 15, 24, 33, 4, 12, 1, 23, 21, 2, 5};
+        Integer[] rands = new Integer[] { 35, 26, 15, 24, 33, 4, 12, 1, 23, 21, 2, 5 };
         HeapPriorityQueue<Integer, Integer> pq = new HeapPriorityQueue<>(rands, rands);
 
         System.out.println("elements: " + rands);
@@ -185,9 +210,9 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
 
         pq.removeMin();
         System.out.println("after removeMin: " + pq);
-        // [             1,
-        //        2,            4,
-        //   23,     21,      5, 12,
+        // [ 1,
+        // 2, 4,
+        // 23, 21, 5, 12,
         // 24, 26, 35, 33, 15]
     }
 }

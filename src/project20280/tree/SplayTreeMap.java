@@ -28,6 +28,22 @@ public class SplayTreeMap<K, V> extends TreeMap<K, V> {
      */
     private void splay(Position<Entry<K, V>> p) {
         // TODO
+        while (!isRoot(p)) {
+            Position<Entry<K, V>> parent = parent(p);
+            if (isRoot(parent)) {
+                rotate(p);
+            } else {
+                Position<Entry<K, V>> grand = parent(parent);
+                boolean zigZig = (p == left(parent)) == (parent == left(grand));
+                if (zigZig) {
+                    rotate(parent);
+                    rotate(p);
+                } else {
+                    rotate(p);
+                    rotate(p);
+                }
+            }
+        }
     }
 
     /**
@@ -35,9 +51,16 @@ public class SplayTreeMap<K, V> extends TreeMap<K, V> {
      *
      * @param p
      */
-    //@Override
+    // @Override
     protected void rebalanceAccess(Position<Entry<K, V>> p) {
         // TODO
+        if (isExternal(p)) {
+            p = parent(p);
+        }
+        if (p != null) {
+            splay(p);
+        }
+
     }
 
     /**
@@ -45,7 +68,7 @@ public class SplayTreeMap<K, V> extends TreeMap<K, V> {
      *
      * @param p
      */
-    //@Override
+    // @Override
     protected void rebalanceInsert(Position<Entry<K, V>> p) {
         // TODO
         splay(p);
@@ -56,15 +79,18 @@ public class SplayTreeMap<K, V> extends TreeMap<K, V> {
      *
      * @param p
      */
-    //@Override
+    // @Override
     protected void rebalanceDelete(Position<Entry<K, V>> p) {
         // TODO
+        if (!isRoot(p)) {
+            splay(parent(p));
+        }
     }
 
     public static void main(String[] args) {
         SplayTreeMap<Integer, Integer> treeMap = new SplayTreeMap<Integer, Integer>();
 
-        Integer[] arr = new Integer[]{44, 17, 88, 8, 32, 65, 97, 28, 54, 82, 93, 21, 29, 76, 80};
+        Integer[] arr = new Integer[] { 44, 17, 88, 8, 32, 65, 97, 28, 54, 82, 93, 21, 29, 76, 80 };
         for (Integer i : arr)
             treeMap.put(i, i);
         System.out.println("treeMap " + treeMap);
